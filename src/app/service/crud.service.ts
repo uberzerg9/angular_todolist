@@ -1,14 +1,36 @@
-import { Injectable } from '@angular/core';
+import { Task } from './../model/task';
+import { Injectable, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CrudService {
+export class CrudService implements OnInit {
 
   serviceUrl:string;
 
   constructor(private http:HttpClient) {
     this.serviceUrl = "http://localhost:3000/tasks"
+   }
+
+   addTask(task:Task):Observable<Task> {
+    return this.http.post<Task>(this.serviceUrl,task)
+   }
+
+   getAllTasks():Observable<Task[]> {
+    return this.http.get<Task[]>(this.serviceUrl)
+   }
+
+   deleteTask(task:Task):Observable<Task> {
+    return this.http.delete<Task>(this.serviceUrl+'/'+task.id)
+   }
+
+   editTask(task:Task):Observable<Task> {
+    return this.http.put<Task>(this.serviceUrl+'/'+task.id,task)
+   }
+
+   ngOnInit():void {
+
    }
 }
